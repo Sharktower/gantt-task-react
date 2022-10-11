@@ -98,6 +98,8 @@ export const Gantt: React.FunctionComponent<GanttProps> = ({
   const [scrollX, setScrollX] = useState(-1);
   const [ignoreScrollEvent, setIgnoreScrollEvent] = useState(false);
 
+  const [isEditing, setIsEditing] = useState(false)
+
   // task change events
   useEffect(() => {
     let filteredTasks: Task[];
@@ -387,6 +389,12 @@ export const Gantt: React.FunctionComponent<GanttProps> = ({
       onExpanderClick({ ...task, hideChildren: !task.hideChildren });
     }
   };
+
+  const handleOnIsEditing = () => {
+    setIsEditing(!isEditing)
+  };
+
+
   const gridProps: GridProps = {
     columnWidth,
     svgWidth,
@@ -448,7 +456,10 @@ export const Gantt: React.FunctionComponent<GanttProps> = ({
     onExpanderClick: handleExpanderClick,
     TaskListHeader,
     TaskListTable,
+    isEditing,
+    handleOnIsEditing
   };
+
   return (
     <div>
       <div
@@ -465,6 +476,7 @@ export const Gantt: React.FunctionComponent<GanttProps> = ({
           ganttHeight={ganttHeight}
           scrollY={scrollY}
           scrollX={scrollX}
+          setIsEditing={handleOnIsEditing}
         />
         {ganttEvent.changedTask && (
           <Tooltip

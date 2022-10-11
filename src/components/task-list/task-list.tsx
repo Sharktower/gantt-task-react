@@ -17,6 +17,8 @@ export type TaskListProps = {
   selectedTask: BarTask | undefined;
   setSelectedTask: (task: string) => void;
   onExpanderClick: (task: Task) => void;
+  isEditing: boolean;
+  handleOnIsEditing: () => void;
   TaskListHeader: React.FC<{
     headerHeight: number;
     rowWidth: string;
@@ -33,6 +35,8 @@ export type TaskListProps = {
     selectedTaskId: string;
     setSelectedTask: (taskId: string) => void;
     onExpanderClick: (task: Task) => void;
+    isEditing: boolean;
+    handleOnIsEditing: () => void;
   }>;
 };
 
@@ -53,6 +57,8 @@ export const TaskList: React.FC<TaskListProps> = ({
   horizontalContainerClass,
   TaskListHeader,
   TaskListTable,
+  isEditing,
+  handleOnIsEditing,
 }) => {
   const horizontalContainerRef = useRef<HTMLDivElement>(null);
   useEffect(() => {
@@ -78,6 +84,8 @@ export const TaskList: React.FC<TaskListProps> = ({
     selectedTaskId: selectedTaskId,
     setSelectedTask,
     onExpanderClick,
+    isEditing,
+    handleOnIsEditing
   };
 
   return (

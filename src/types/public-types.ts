@@ -71,6 +71,9 @@ export interface EventOption {
    * Invokes on expander on task list
    */
   onExpanderClick?: (task: Task) => void;
+  
+  handleOnIsEditing?: () => void;
+  
 }
 
 export interface DisplayOption {
@@ -136,6 +139,7 @@ export interface StylingOption {
      */
     setSelectedTask: (taskId: string) => void;
     onExpanderClick: (task: Task) => void;
+    handleOnIsEditing: () => void;
   }>;
 }
 

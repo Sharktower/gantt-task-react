@@ -11,6 +11,7 @@ export type TaskGanttProps = {
   ganttHeight: number;
   scrollY: number;
   scrollX: number;
+  setIsEditing: () => void;
 };
 export const TaskGantt: React.FC<TaskGanttProps> = ({
   gridProps,
@@ -19,6 +20,7 @@ export const TaskGantt: React.FC<TaskGanttProps> = ({
   ganttHeight,
   scrollY,
   scrollX,
+  setIsEditing,
 }) => {
   const ganttSVGRef = useRef<SVGSVGElement>(null);
   const horizontalContainerRef = useRef<HTMLDivElement>(null);
@@ -36,6 +38,11 @@ export const TaskGantt: React.FC<TaskGanttProps> = ({
       verticalGanttContainerRef.current.scrollLeft = scrollX;
     }
   }, [scrollX]);
+
+
+  const handleIsEditing = () => {
+    setIsEditing()
+  }
 
   return (
     <div
@@ -61,7 +68,7 @@ export const TaskGantt: React.FC<TaskGanttProps> = ({
             : { width: gridProps.svgWidth }
         }
       >
-        <button className={styles.editGanttButton}>Edit Gantt</button>
+        <button className={styles.editGanttButton} onClick={() => handleIsEditing()} >Edit Gantt</button>
         <svg
           xmlns="http://www.w3.org/2000/svg"
           width={gridProps.svgWidth}
