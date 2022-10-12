@@ -1,0 +1,18 @@
+.taskListEmptyWrapper {
+    height: 100%;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    border-bottom: 5px solid white;
+    text-align: center;
+    align-items: center;
+    border-right: 1px solid #F2F2F2;
+}
+
+.taskListEmptyCircle {
+    height: 75px;
+    width: 75px;
+    border-radius: 500px;
+    background-color: #673F73;
+    opacity: 0.1
+}
