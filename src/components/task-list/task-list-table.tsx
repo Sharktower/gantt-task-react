@@ -1,30 +1,12 @@
-import React, { useState } from "react";
+import React, { Fragment, useEffect } from "react";
 import styles from "./task-list-render-tasks.module.css";
 import { Task } from "../../types/public-types";
-import { TaskListPhaseEdit } from "./task-list-phase-edit";
-import {TaskListEmpty} from  "./task-list-empty"
+import { TaskListEdit } from "./task-list-edit";
+import { TaskListEmpty } from  "./task-list-empty"
 import { TaskListRenderTasks } from "./task-list-render-tasks";
+import { TaskListCreateButtons } from "./task-list-create-buttons"
 
-// const localeDateStringCache = {};
-// const toLocaleDateStringFactory =
-//   (locale: string) =>
-//   (date: Date, dateTimeOptions: Intl.DateTimeFormatOptions) => {
-//     const key = date.toString();
-//     let lds = localeDateStringCache[key];
-//     if (!lds) {
-//       lds = date.toLocaleDateString(locale, dateTimeOptions);
-//       localeDateStringCache[key] = lds;
-//     }
-//     return lds;
-//   };
-// const dateTimeOptions: Intl.DateTimeFormatOptions = {
-//   weekday: "short",
-//   year: "numeric",
-//   month: "long",
-//   day: "numeric",
-// };
-
-
+type itemTypes = 'project' | 'milestone' | 'task' | '';
 
 export const TaskListTableDefault: React.FC<{
   fontFamily: string;
@@ -45,31 +27,61 @@ export const TaskListTableDefault: React.FC<{
   handleOnIsEditing,
 }) => {
 
-  const [isNewPhase, setIsNewPhase] = useState(false);
+  let newTasks: any = [];
 
-  const removeNewPhase = () => {
-    if (isEditing && !tasks.length) {
-      handleOnIsEditing();
-    } else {
-      setIsNewPhase(false);
+  useEffect(() => {
+    newTasks = tasks;
+  }, [tasks])
+
+  const OUTCOME = {
+    id: '',
+    type: "milestone",
+    name: '',
+    start: undefined,
+    end: undefined,
+    progress: 0,
+    activities: [],
+  }
+
+  const ACTIVITY = {
+    id: '',
+    type: "task",
+    name: '',
+    start: undefined,
+    end: undefined,
+    progress: 0,
+    activities: [],
+  }
+
+  const PROJECT = {
+    id: '',
+    type: "project",
+    name: '',
+    start: undefined,
+    end: undefined,
+    progress: 0,
+    activities: [],
+  }
+
+ 
+  const handleTypeSelection = (type: itemTypes) => {
+
+    if(type === 'project'){
+      newTasks.unshift(PROJECT)
+      console.log(isEditing, newTasks)
     }
-  };
-
-  const createNewPhase = () => {
-    setIsNewPhase(true);
-  };
-
-  const createNewItem = () => {
-    console.log('creating a new phase')
+    if(type === 'milestone'){
+      newTasks.push(OUTCOME)
+    }
+    if(type === 'task'){
+      newTasks.push(ACTIVITY)
+    }
+    if(!isEditing){
+      handleOnIsEditing();
+    }
   }
 
-  const saveNewItem = () => {
-    console.log('saving new item')
-  }
-
-  const saveNewPhase = () => {
-    setIsNewPhase(false);
-  }
+  console.log(isEditing, newTasks)
 
   return (
     <div
@@ -80,15 +92,20 @@ export const TaskListTableDefault: React.FC<{
         width: "100%",
       }}
     >
-   
-
       {/* NO TASK */}
-      {tasks.length === 0 && !isEditing && <TaskListEmpty createPhase={createNewPhase} createItem={createNewItem} handleOnIsEditing={handleOnIsEditing}/>}
-      {/* CREATE NEW PHASE*/}
-      {isEditing && <TaskListPhaseEdit createPhase={createNewPhase} createItem={createNewItem} savePhase={saveNewPhase} removePhase={removeNewPhase} tasks={tasks} saveItem={saveNewItem} isNewPhase={isNewPhase}/>}
+      {!isEditing && newTasks.length === 0 && <TaskListEmpty onTypeSelection={handleTypeSelection}/>}
+
       {/* RENDER TASK ITEMS */}
-      {tasks.length !== 0 && !isEditing && <TaskListRenderTasks tasks={tasks} onExpanderClick={onExpanderClick}/>}
-     
+      {!isEditing && newTasks.length !== 0 &&  <TaskListRenderTasks tasks={newTasks} onExpanderClick={onExpanderClick}/>}
+      
+      {/* CREATE NEW PHASE*/}
+      {isEditing && 
+        <Fragment>
+          <TaskListEdit tasks={newTasks} onIsEditing={handleOnIsEditing}/>
+          <TaskListCreateButtons handleSelection={handleTypeSelection}/>
+        </Fragment>
+      } 
+        
     </div>
   );
 };

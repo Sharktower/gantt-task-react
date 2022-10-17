@@ -2,20 +2,12 @@ import React from "react";
 import {TaskListCreateButtons} from './task-list-create-buttons'
 import styles from "./task-list-empty.module.css";
 
+
 type TaskListEmptyProps = {
-    createPhase: () => void;
-    createItem: () => void;
-    handleOnIsEditing: () => void;
+    onTypeSelection: any;
 }
 
-export const TaskListEmpty = ({createPhase, createItem, handleOnIsEditing} : TaskListEmptyProps) => {
-
-    const handleCreatePhase = () => {
-        console.log("Hello")
-        handleOnIsEditing()
-        createPhase()
-    }
-
+export const TaskListEmpty = ({onTypeSelection} : TaskListEmptyProps) => {
     return(
         <div className={styles.taskListEmptyWrapper}>
             <span>
@@ -30,7 +22,7 @@ export const TaskListEmpty = ({createPhase, createItem, handleOnIsEditing} : Tas
                         Your gantt plan is currenlty empty. Start by adding a phase, activity or outcome below
                     </p>
                 </div>
-                <TaskListCreateButtons createPhase={handleCreatePhase} createItem={createItem}/>
+                <TaskListCreateButtons handleSelection={onTypeSelection}/>
             </span>
       </div>
     )
