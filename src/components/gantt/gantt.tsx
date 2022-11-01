@@ -72,8 +72,8 @@ export const Gantt: React.FunctionComponent<GanttProps> = ({
     const [startDate, endDate] = ganttDateRange(tasks, viewMode, preStepsCount);
     return { viewMode, dates: seedDates(startDate, endDate, viewMode) };
   });
-  const [currentViewDate, setCurrentViewDate] = useState<Date | undefined>(
-    undefined
+  const [currentViewDate, setCurrentViewDate] = useState<Date>(
+    new Date()
   );
 
   const [taskListWidth, setTaskListWidth] = useState(0);
@@ -211,7 +211,7 @@ export const Gantt: React.FunctionComponent<GanttProps> = ({
       ) {
         const prevStateTask = barTasks.find(t => t.id === changedTask.id);
         if (
-          prevStateTask &&
+          prevStateTask && prevStateTask.start && prevStateTask.end && changedTask.start && changedTask.end && 
           (prevStateTask.start.getTime() !== changedTask.start.getTime() ||
             prevStateTask.end.getTime() !== changedTask.end.getTime() ||
             prevStateTask.progress !== changedTask.progress)

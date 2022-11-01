@@ -7,7 +7,6 @@ type TaskListCreateButtonsProps = {
 export const TaskListCreateButtons = ({handleSelection} : TaskListCreateButtonsProps) => {
 
     const onSelection = (e:any) => {
-        console.log(e)
         handleSelection(e.target.name)
     }
 

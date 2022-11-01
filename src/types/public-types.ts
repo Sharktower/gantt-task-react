@@ -8,19 +8,20 @@ export enum ViewMode {
   Month = "Month",
   Year = "Year",
 }
-export type TaskType = "task" | "milestone" | "project" 
+export type TaskType = "task" | "milestone" | "project" | ""
 export interface Task {
-  id?: string;
-  type: string;
-  name?: string;
-  start?: Date;
-  end?: Date;
+  id: string;
+  type: TaskType;
+  name: string;
   activities: Task[];
   owner?: string;
+  start?: Date;
+  end?: Date;
+  workstream? : string;
   /**
    * From 0 to 100
    */
-  progress?: number;
+  progress: number;
   styles?: {
     backgroundColor?: string;
     backgroundSelectedColor?: string;

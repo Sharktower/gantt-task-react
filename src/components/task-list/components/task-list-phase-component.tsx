@@ -1,51 +1,53 @@
-import React, {useState, useEffect } from "react";
+import React, { useState } from "react";
+import { Task } from "../../../types/public-types"
 import styles from '../task-list-items-edit.module.css'
 
-interface Phase {
-    name?: string;
-    startDate?: Date;
-    endDate?: Date;
-}
-
 type PhaseComponetsProps = {
-    phase: Phase,
-    onSavePhase: ({...Phase}) => void,
-    onDeletePhase: () => void,
-    index: number | undefined,
+    phase: Task,
+    handleSave: (idx: number, item: Task) => void,
+    handleDelete: (idx: number) => void,
+    handleNewPhaseTask: (idx: number) =>  void,
+    index: number,
 }
 
-const validatePhaseComplete = (phase: any) => !(phase.startDate && phase.endDate);
+export const PhaseComponent = ({
+  phase, 
+  handleSave,
+  handleDelete,
+  handleNewPhaseTask,
+  index
+} : PhaseComponetsProps) => {
 
-export const PhaseComponent = ({phase, onSavePhase, onDeletePhase} : PhaseComponetsProps) => {
+    const [isEditing, setIsEditing] = useState(!phase.start && !phase.end)
+    const [thisPhase, setThisPhase] = useState(phase);
 
-    useEffect(() => {
-      if(!validatePhaseComplete(phase)){
-        setIsEditing(true)}
-      },
-      [phase]
-    )
-
-
-    const [isEditing, setIsEditing] = useState(false)
-
-    const handleDelete = () => onDeletePhase();
-    const handleIsEditing = () => setIsEditing(!isEditing);
-    const handleInput = (e: any) =>  onSavePhase({[e.target.name]: e.target.value});
-    const handleOnSave = (e: any) => {onSavePhase(e); setIsEditing(!isEditing) }
+    const onDelete = () => handleDelete(index);
+    const onIsEditing = () => setIsEditing(!isEditing);
+    const onCreateItem = () => handleNewPhaseTask(index)
+    const onSave = () => {
+      handleSave(index, thisPhase)
+      setIsEditing(false)
+    }
+   
+    const handleInput = (e: any) => {
+      const tmpItem = {[e.target.name]: e.target.value}
+      setThisPhase({...thisPhase, ...tmpItem})
+    }
 
     return(
         <div style={{ display: "flex", width: "100%" }}>
-        {!isEditing && 
-            <table className={styles.taskListItemEditPhaseWrapper}>
-                <thead style={{height: '40px'}}>
-                    <tr>
-                        <th style={{ width: "50%", textAlign:'left' }}>Something</th>
-                        <th style={{ width: "20%", textAlign:'left' }}>something</th>
-                        <th style={{ width: "20%", textAlign:'left' }}>something</th>
-                        <th style={{ width: "10%", textAlign:'left' }}><button onClick={handleIsEditing}>Edit</button></th>
-                    </tr>
-                </thead>
-            </table>
+        {!isEditing &&
+          <table className={styles.taskListItemEditPhaseWrapper}>
+            <thead style={{height: '40px'}}>
+              <tr>
+                <th style={{ width: "50%", textAlign:'left' }}>Something</th>
+                <th style={{ width: "20%", textAlign:'left' }}>something</th>
+                <th style={{ width: "20%", textAlign:'left' }}>something</th>
+                <th style={{ width: "10%", textAlign:'left' }}><button onClick={onIsEditing}>Edit</button></th>
+              </tr>
+            </thead>
+            <button onClick={onCreateItem}>Add Item</button>
+          </table>
         }
 
         {isEditing && 
@@ -55,18 +57,18 @@ export const PhaseComponent = ({phase, onSavePhase, onDeletePhase} : PhaseCompon
                 padding: "10px",
                 }}
             >
-                <thead>
-                    <tr>
-                        <th style={{ textAlign: "left", padding: "5px", width: "60%" }}>Phase Name</th>
-                        <th style={{ textAlign: "left", padding: "5px", width: "10%" }}>Start</th>
-                        <th style={{ textAlign: "left", padding: "5px", width: "10%" }}>End</th>
-                        <th style={{ textAlign: "left", padding: "5px", width: "10%" }}>&nbsp;</th>
-                        <th style={{ textAlign: "left", padding: "5px", width: "10%" }}>&nbsp;</th>
-                    </tr>
-                </thead>
-                <tbody>
+              <thead>
                 <tr>
-                  <td style={{ padding: "5px" }}>
+                  <th style={{ textAlign: "left", padding: "5px", width: "60%" }}>Phase Name</th>
+                  <th style={{ textAlign: "left", padding: "5px", width: "10%" }}>Start</th>
+                  <th style={{ textAlign: "left", padding: "5px", width: "10%" }}>End</th>
+                  <th style={{ textAlign: "left", padding: "5px", width: "10%" }}>&nbsp;</th>
+                  <th style={{ textAlign: "left", padding: "5px", width: "10%" }}>&nbsp;</th>
+                </tr>
+              </thead>
+              <tbody>
+              <tr>
+                <td style={{ padding: "5px" }}>
                     <input
                       type="text"
                       name="text2"
@@ -90,13 +92,13 @@ export const PhaseComponent = ({phase, onSavePhase, onDeletePhase} : PhaseCompon
                       }}
                       placeholder="Enter a Phase name"
                       type="date"
-                      name="startDate"
+                      name="start"
                       onChange={handleInput}
                     />
                   </td>
                   <td style={{ padding: "5px" }}>
                     <input
-                      name="endDate"
+                      name="end"
                       onChange={handleInput}
                       style={{
                         width: "100%",
@@ -112,8 +114,8 @@ export const PhaseComponent = ({phase, onSavePhase, onDeletePhase} : PhaseCompon
                   <td style={{ padding: "5px" }}>
                     <button
                       style={{ backgroundColor: "gray", color: "white" }}
-                      onClick={handleOnSave}
-                      disabled={validatePhaseComplete(phase)}
+                      onClick={onSave}
+                      disabled={!thisPhase.start && !thisPhase.end}
                     >
                       +
                     </button>
@@ -122,9 +124,9 @@ export const PhaseComponent = ({phase, onSavePhase, onDeletePhase} : PhaseCompon
               </tbody>
             </table>}
           <span style={{ display: "flex", alignItems: "center", justifyContent: 'center', width: "5%" }}>
-            <button style={{ height: "fit-content" }} onClick={handleDelete}>
+            <button style={{ height: "fit-content" }} onClick={onDelete}>
                 x
-          </button>
+            </button>
           </span>
       </div>
     )

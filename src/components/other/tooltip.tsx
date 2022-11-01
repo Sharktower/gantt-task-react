@@ -123,7 +123,7 @@ export const StandardTooltipContent: React.FC<{
   };
   return (
     <div className={styles.tooltipDefaultContainer} style={style}>
-      <b style={{ fontSize: fontSize + 6 }}>{`${
+      {/* <b style={{ fontSize: fontSize + 6 }}>{`${
         task.name
       }: ${task.start.getDate()}-${
         task.start.getMonth() + 1
@@ -135,7 +135,7 @@ export const StandardTooltipContent: React.FC<{
           (task.end.getTime() - task.start.getTime()) /
           (1000 * 60 * 60 * 24)
         )} day(s)`}</p>
-      )}
+      )} */}
 
       <p className={styles.tooltipDefaultContainerParagraph}>
         {!!task.progress && `Progress: ${task.progress} %`}
