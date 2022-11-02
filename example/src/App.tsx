@@ -84,7 +84,6 @@ const App = () => {
         onSelect={handleSelect}
         onExpanderClick={handleExpanderClick}
         listCellWidth={isChecked ? "155px" : ""}
-        ganttHeight={800}
         columnWidth={columnWidth}
       />
     </div>

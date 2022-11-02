@@ -15,8 +15,8 @@ export interface Task {
   name: string;
   activities: Task[];
   owner?: string;
-  start?: Date;
-  end?: Date;
+  start: Date;
+  end: Date;
   workstream? : string;
   /**
    * From 0 to 100

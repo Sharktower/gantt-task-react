@@ -6,43 +6,39 @@ import { TaskListEmpty } from  "./task-list-empty"
 import { TaskListRenderTasks } from "./task-list-render-tasks";
 import { TaskListCreateButtons } from "./task-list-create-buttons"
 
-const OUTCOME : Task = {
+const OUTCOME = {
   id: '',
   type: "milestone",
   name: '',
   start: undefined,
   end: undefined,
-  progress: 0,
   activities: [],
 }
 
-const ACTIVITY : Task = {
+const ACTIVITY = {
   id: '',
   type: "task",
   name: '',
   start: undefined,
   end: undefined,
-  progress: 0,
   activities: [],
 }
 
-const PROJECT : Task = {
+const PROJECT  = {
   id: '',
   type: 'project',
   name: '',
   start: undefined,
   end: undefined,
-  progress: 0,
   activities: [],
 }
 
-const NEW_TASK : Task = {
+const NEW_TASK  = {
   id: '',
   type: '',
   name: '',
   start: undefined,
   end: undefined,
-  progress: 0,
   activities: [],
 }
 
@@ -50,7 +46,7 @@ export const TaskListTableDefault: React.FC<{
   fontFamily: string;
   fontSize: string;
   locale: string;
-  tasks: Task[];
+  tasks: any ;
   selectedTaskId: string;
   setSelectedTask: (taskId: string) => void;
   onExpanderClick: (task: Task) => void;
@@ -70,7 +66,7 @@ export const TaskListTableDefault: React.FC<{
 
   // ON CREATE NEW SELECTION, ADD EMPTY OPBJECT OF THAT TYPE
   const handleCreateTask = (type: TaskType) => {
-    let newTaskToRender = tasksToRender;
+    let newTaskToRender = [...tasksToRender];
     if(type === 'project') newTaskToRender.unshift(PROJECT);
     if(type === 'milestone') newTaskToRender.push(OUTCOME);
     if(type === 'task') newTaskToRender.push(ACTIVITY);    
@@ -86,18 +82,18 @@ export const TaskListTableDefault: React.FC<{
   }
 
   const handleDeleteTask = (idx : number) => {
-    const newTasks = tasksToRender.slice(idx, 0);
-    updateTaskList(newTasks);
+    let newTasks = [...tasksToRender]
+    updateTaskList(newTasks.splice(idx, 1));
   }
 
   const handleSaveTask = (idx: number, item: Task) => {
-    const newTasks = tasksToRender;
+    const newTasks = [...tasksToRender];
     newTasks[idx] = item;
     updateTaskList(newTasks);
   }
 
   const handleNewPhaseTask = (idx: number) => {
-    const newTasks = tasksToRender;
+    const newTasks = [...tasksToRender];
     newTasks[idx].activities.push(NEW_TASK);
     setTasksToRender(newTasks);
   }
@@ -109,6 +105,7 @@ export const TaskListTableDefault: React.FC<{
         fontFamily: fontFamily,
         fontSize: fontSize,
         width: "100%",
+        height: "100%",
       }}
     >
       {/* NO TASKS, RENDER EMPTY GANTT*/}

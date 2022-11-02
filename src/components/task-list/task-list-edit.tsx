@@ -1,10 +1,10 @@
-import React, {Fragment} from "react";
+import React from "react";
 import { ItemComponent } from "./components/task-list-item-component";
 import { Task } from "../../types/public-types";
 import { PhaseComponent } from './components/task-list-phase-component'
 
 type TaskListInputPhaseProps = {
-    tasks: Task[],
+    tasks: Task [],
     onIsEditing: () => void,
     handleNewPhaseTask: (idx: number) => void;
     handleSaveTask: (idx: number, item: Task) => void,
@@ -13,9 +13,18 @@ type TaskListInputPhaseProps = {
 
 export const TaskListEdit = ({ tasks, handleNewPhaseTask, handleSaveTask, handleDeleteTask } : TaskListInputPhaseProps ) => {
 
-  const handleDeletePhaseTask = (phaseIndex: number, phaseTaskIndex: number | undefined) => {
+  const handleOnDeleteTask = (idx: number) => handleDeleteTask(idx)
+
+  const handleDeletePhaseTask = (phaseIndex: number, phaseTaskIndex: number) => {
     const newTask = tasks[phaseIndex]
-    newTask.activities = newTask.activities.slice(phaseTaskIndex, 0)
+    const newTaskActivities = [...newTask.activities]
+    newTask.activities = newTaskActivities.splice(phaseTaskIndex, 1)
+    handleSaveTask(phaseIndex, newTask)
+  }
+
+  const handleSavePhaseTask = (phaseIndex: number, task: Task) => {
+    const newTask = tasks[phaseIndex];
+    newTask.activities.push(task)
     handleSaveTask(phaseIndex, newTask)
   }
   
@@ -27,36 +36,35 @@ export const TaskListEdit = ({ tasks, handleNewPhaseTask, handleSaveTask, handle
           return <ItemComponent 
             task={task} 
             handleSaveTask={handleSaveTask} 
-            handleDeleteTask={handleDeleteTask} 
+            handleDeleteTask={() => handleOnDeleteTask(idx)} 
             index={idx} 
             hasPhase={false}
-            key={idx}
+            readOnly={false}
+            headerOverride
           />
         } else {
           // IS PHASE, RENDER PROJECT COMPONENT AND ANY ASSOCIATED ACTIVITIES WITH IT.
-          console.log("HELLW!", task)
           return( 
-            <Fragment>
+            <span key={Math.random()}>
               <PhaseComponent 
                 phase={task} 
                 handleDelete={handleDeleteTask} 
                 handleSave={handleSaveTask} 
                 handleNewPhaseTask={handleNewPhaseTask} 
                 index={idx}
-                key={idx}
               />
               {task.activities.map((a: Task, i: number) => 
                   <ItemComponent 
                     task={a} 
                     index={i}
-                    handleSaveTask={handleSaveTask} 
-                    handleDeleteTask={(idx, i) => handleDeletePhaseTask(idx, i)} 
+                    handleSaveTask={handleSavePhaseTask} 
+                    handleDeleteTask={() => handleDeletePhaseTask(idx, i)} 
                     hasPhase
-                    key={i}
+                    readOnly={!(i === 0)}
                   />
                 )
               } 
-            </Fragment>
+            </span>
             )
         }
       })} 
