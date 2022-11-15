@@ -43,7 +43,7 @@ export const Calendar: React.FC<CalendarProps> = ({
         <text
           key={date.getFullYear()}
           y={headerHeight * 0.8}
-          x={columnWidth * i + columnWidth * 0.5}
+          x={columnWidth * i - columnWidth}
           className={styles.calendarBottomText}
         >
           {bottomValue}
@@ -73,7 +73,8 @@ export const Calendar: React.FC<CalendarProps> = ({
         );
       }
     }
-    return [topValues, bottomValues];
+    // return [topValues, bottomValues];
+    return  bottomValues;
   };
 
   const getCalendarValuesForMonth = () => {
@@ -81,14 +82,21 @@ export const Calendar: React.FC<CalendarProps> = ({
     const bottomValues: ReactChild[] = [];
     const topDefaultHeight = headerHeight * 0.5;
     for (let i = 0; i < dateSetup.dates.length; i++) {
+
       const date = dateSetup.dates[i];
-      const bottomValue = getLocaleMonth(date, locale);
+      let bottomValue = getLocaleMonth(date, locale);
+
+      // Hide the first month
+      if(i === 0) bottomValue = ''
+    
       bottomValues.push(
         <text
           key={bottomValue + date.getFullYear()}
           y={headerHeight * 0.8}
-          x={columnWidth * i + columnWidth * 0.5}
+          x={columnWidth * i}
           className={styles.calendarBottomText}
+          fontSize="12px"
+          fontWeight={400}
         >
           {bottomValue}
         </text>
@@ -314,7 +322,7 @@ export const Calendar: React.FC<CalendarProps> = ({
   let bottomValues: ReactChild[] = [];
   switch (dateSetup.viewMode) {
     case ViewMode.Year:
-      [topValues, bottomValues] = getCalendarValuesForYear();
+      bottomValues = getCalendarValuesForYear();
       break;
     case ViewMode.Month:
         [topValues, bottomValues] = getCalendarValuesForMonth();
@@ -341,7 +349,8 @@ export const Calendar: React.FC<CalendarProps> = ({
         height={headerHeight}
         className={styles.calendarHeader}
       />
-      {bottomValues} {topValues}
+      {bottomValues} 
+      {topValues}
     </g>
   );
 };

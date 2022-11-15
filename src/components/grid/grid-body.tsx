@@ -44,12 +44,12 @@ export const GridBody: React.FC<GridBodyProps> = ({
         className={styles.gridRow}
       />
     );
+
     rowLines.push(
       <line
         key={"RowLine" + task.id}
         x="0"
         y1={y + rowHeight}
-        x2={svgWidth}
         y2={y + rowHeight}
         className={styles.gridRowLine}
       />
@@ -69,7 +69,7 @@ export const GridBody: React.FC<GridBodyProps> = ({
         x1={tickX}
         y1={0}
         x2={tickX}
-        y2={y}
+        y2={900}
         className={styles.gridTick}
       />
     );
@@ -88,13 +88,24 @@ export const GridBody: React.FC<GridBodyProps> = ({
         ).getTime() >= now.getTime())
     ) {
       today = (
+        <g>
+        <rect
+          x={tickX - 4}
+          y={0}
+          rx='50%'
+          ry='50%'
+          width='10px'
+          height='10px'
+          fill={todayColor}
+        />
         <rect
           x={tickX}
           y={0}
-          width={columnWidth}
-          height={y}
+          width='2px'
+          height="100%"
           fill={todayColor}
         />
+         </g>
       );
     }
     // rtl for today
@@ -105,19 +116,31 @@ export const GridBody: React.FC<GridBodyProps> = ({
       dates[i + 1].getTime() < now.getTime()
     ) {
       today = (
+        <g>
+        <rect
+          x={tickX - 4}
+          y={0}
+          rx='50%'
+          ry='50%'
+          width='10px'
+          height='10px'
+          fill={todayColor}
+        />
         <rect
           x={tickX + columnWidth}
           y={0}
-          width={columnWidth}
-          height={y}
+          width='2px'
+          height="100%"
           fill={todayColor}
         />
+        </g>
       );
     }
     tickX += columnWidth;
   }
+
   return (
-    <g className="gridBody">
+    <g className="gridBody" height="900" >
       <g className="rows">{gridRows}</g>
       <g className="rowLines">{rowLines}</g>
       <g className="ticks">{ticks}</g>

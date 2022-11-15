@@ -74,16 +74,23 @@ export const ganttDateRange = (
   viewMode: ViewMode,
   preStepsCount: number
 ) => {
-  let newStartDate: Date = tasks[0].start;
-  let newEndDate: Date = tasks[0].start;
-  for (const task of tasks) {
-    if (task.start < newStartDate) {
-      newStartDate = task.start;
+
+  let newStartDate: Date
+  let newEndDate: Date
+
+  if( tasks.length ){
+    newStartDate = tasks[0].start;
+    newEndDate = tasks[0].start;
+    for (const task of tasks) {
+      if (task.start < newStartDate) {
+        newStartDate = task.start;
+      }
+      if (task.end > newEndDate) {
+        newEndDate = task.end;
+      }
     }
-    if (task.end > newEndDate) {
-      newEndDate = task.end;
-    }
-  }
+
+
   switch (viewMode) {
     case ViewMode.Year:
       newStartDate = addToDate(newStartDate, -1, "year");
@@ -95,7 +102,7 @@ export const ganttDateRange = (
       newStartDate = addToDate(newStartDate, -1 * preStepsCount, "month");
       newStartDate = startOfDate(newStartDate, "month");
       newEndDate = addToDate(newEndDate, 1, "year");
-      newEndDate = startOfDate(newEndDate, "year");
+      // newEndDate = startOfDate(newEndDate, "year");
       break;
     case ViewMode.Week:
       newStartDate = startOfDate(newStartDate, "day");
@@ -132,6 +139,12 @@ export const ganttDateRange = (
       newEndDate = addToDate(newEndDate, 1, "day");
       break;
   }
+
+} else {
+  newStartDate = new Date();
+  newStartDate = addToDate(newStartDate, -1, "month");
+  newEndDate = addToDate(newStartDate, 1, "year")
+}
   return [newStartDate, newEndDate];
 };
 
@@ -173,8 +186,10 @@ export const seedDates = (
 
 export const getLocaleMonth = (date: Date, locale: string) => {
   let bottomValue = getCachedDateTimeFormat(locale, {
-    month: "long",
+    month: "short",
+    year: '2-digit'
   }).format(date);
+
   bottomValue = bottomValue.replace(
     bottomValue[0],
     bottomValue[0].toLocaleUpperCase()

@@ -1,4 +1,5 @@
 import React, { useEffect, useRef, useState } from "react";
+import moment from 'moment';
 import { BarTask } from "../../types/bar-task";
 import { GanttContentMoveAction } from "../../types/gantt-task-actions";
 import { Bar } from "./bar/bar";
@@ -66,7 +67,7 @@ export const TaskItem: React.FC<TaskItemProps> = props => {
     const width = task.x2 - task.x1;
     const hasChild = task.barChildren.length > 0;
     if (isTextInside) {
-      return task.x1 + width * 0.5;
+      return task.x1 * 1.45;
     }
     if (rtl && textRef.current) {
       return (
@@ -108,18 +109,19 @@ export const TaskItem: React.FC<TaskItemProps> = props => {
       }}
     >
       {taskItem}
+      { isTextInside ? 
       <text
         x={getX()}
         y={task.y + taskHeight * 0.5}
-        className={
-          isTextInside
-            ? style.barLabel
-            : style.barLabel && style.barLabelOutside
-        }
+        className={style.barLabel}
         ref={textRef}
+        fontSize="11px"
+        fontWeight="400"
       >
-        {task.name}
-      </text>
+        {moment(task.start).format("D MMM")} - {moment(task.end).format("D MMM")}
+      </text> :
+      <text/>
+      }
     </g>
   );
 };
